@@ -1,14 +1,16 @@
-# Hearsay Design System - AI Usage Instructions
+
+# Hearsay Design System - AI Usage Instructions (Updated for Direct Imports)
 
 ## Overview
 
-This repository contains the Hearsay Design System (HDS), a comprehensive React component library with design tokens, icons, and styling system. When working in a workspace alongside this design system repository, use this guide to properly import and implement HDS components.
+This repository contains the Hearsay Design System (HDS), a comprehensive React component library with design tokens, icons, and styling system. When working in a workspace alongside this design system repository, use this guide to properly import and implement HDS components using direct file imports.
 
 ## Package Information
 
 - **Package Name**: `@hearsaycorp/hearsay-design-system`
 - **Current Version**: `9.4.1`
 - **Design System Context**: `hds-v9`
+- **Import Method**: Direct source file imports (development setup)
 
 ## Quick Start
 
@@ -17,7 +19,7 @@ This repository contains the Hearsay Design System (HDS), a comprehensive React 
 **CRITICAL**: Before using any HDS components, you MUST wrap your application with `DesignSystemDecorator` to enable CSS custom properties:
 
 ```tsx
-import { DesignSystemDecorator } from '@hearsaycorp/hearsay-design-system';
+import { DesignSystemDecorator } from '../../../hearsay-design-system/library/src/components/DesignSystemDecorator/DesignSystemDecorator';
 
 function App() {
   return (
@@ -28,25 +30,25 @@ function App() {
 }
 ```
 
-### 2. Component Imports
+### 2. Component Imports (Direct Source Files)
 
-**Main Components** (import from root):
+**Main Components** (import directly from source):
 ```tsx
-import { 
-  Button, 
-  Alert, 
-  Modal, 
-  TextInput,
-  Select,
-  Checkbox,
-  // ... other components
-} from '@hearsaycorp/hearsay-design-system';
+import { Button } from '../../../hearsay-design-system/library/src/components/Button/Button';
+import { BUTTON_THEME, BUTTON_SIZE, BUTTON_TYPES } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
+import { Alert } from '../../../hearsay-design-system/library/src/components/Alert/Alert';
+import { ALERT_THEME } from '../../../hearsay-design-system/library/src/components/Alert/Alert.types';
+import { TextInput } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput';
+import { TEXT_INPUT_TYPES } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput.types';
+import { ElevatedContainer } from '../../../hearsay-design-system/library/src/components/ElevatedContainer/ElevatedContainer';
+import { Heading } from '../../../hearsay-design-system/library/src/components/Heading/Heading';
+import { HEADING_SIZE } from '../../../hearsay-design-system/library/src/components/Heading/Heading.types';
 ```
 
-**Individual Icons** (import specific icons for bundle optimization):
+**Individual Icons** (import specific icons):
 ```tsx
-import { CircleCheckRegular } from '@hearsaycorp/hearsay-design-system/icons/CircleCheckRegular';
-import { UserRegular } from '@hearsaycorp/hearsay-design-system/icons/UserRegular';
+import { CircleCheckRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/CircleCheckRegular';
+import { UserRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/UserRegular';
 ```
 
 ## Components Reference
@@ -65,28 +67,53 @@ Alert, Avatar, Badge, Button, Checkbox, DesignSystemDecorator, DropdownButton, E
 ### Component Architecture
 - **Individual folder structure**: Each component is self-contained
 - **BEM class naming**: Components use `.hds-v9` and BEM methodology (e.g., `.hds-button__icon`)
-- **Static enums**: Components expose static properties for sizes, colors, themes
+- **Enum imports**: Import types/enums separately from `.types.ts` files
 - **TypeScript support**: Full type definitions available
 
 ### Common Component Patterns
 
 **Button with size and theme:**
 ```tsx
+import { Button } from '../../../hearsay-design-system/library/src/components/Button/Button';
+import { BUTTON_THEME, BUTTON_SIZE } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
+
 <Button 
   text="Click me"
-  size={Button.SIZE.LARGE}
-  theme={Button.THEME.PRIMARY}
+  size={BUTTON_SIZE.MD}
+  theme={BUTTON_THEME.PRIMARY}
   onClick={handleClick}
 />
 ```
 
-**Icon with semantic color:**
+**TextInput with validation:**
 ```tsx
-<CircleCheckRegular 
-  color={CircleCheckRegular.COLOR.SUCCESS}
-  size={CircleCheckRegular.SIZE.SM}
-  ariaLabel="Success indicator"
+import { TextInput } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput';
+import { TEXT_INPUT_TYPES } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput.types';
+
+<TextInput
+  labelText="Email address"
+  type={TEXT_INPUT_TYPES.EMAIL}
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  placeholder="Enter your email"
+  required
+  error={emailError}
 />
+```
+
+**Alert with theme:**
+```tsx
+import { Alert } from '../../../hearsay-design-system/library/src/components/Alert/Alert';
+import { ALERT_THEME } from '../../../hearsay-design-system/library/src/components/Alert/Alert.types';
+
+<Alert
+  theme={ALERT_THEME.ERROR}
+  title="Error occurred"
+  onDismiss={() => setError('')}
+  dismissText="Dismiss"
+>
+  Something went wrong. Please try again.
+</Alert>
 ```
 
 ## Design Tokens & Styling
@@ -193,102 +220,52 @@ $hds-box-shadow-hover: 0 5px 25px 0 rgba(46, 55, 65, 0.4);
 
 ### Icon Usage Patterns
 
-**Optimal Import** (recommended for bundle size):
+**Direct Import** (recommended for bundle size):
 ```tsx
-import { CircleCheckRegular } from '@hearsaycorp/hearsay-design-system/icons/CircleCheckRegular';
-import { UserRegular } from '@hearsaycorp/hearsay-design-system/icons/UserRegular';
+import { CircleCheckRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/CircleCheckRegular';
+import { UserRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/UserRegular';
 ```
 
 **Icon Properties**:
 ```tsx
-// Size options
-ICON_SIZE.XS    // 12px
-ICON_SIZE.SM    // 16px  
-ICON_SIZE.MD    // 24px (default)
-ICON_SIZE.LG    // 32px
-ICON_SIZE.XL    // 48px
-ICON_SIZE.2XL   // 64px
+// Size options (check individual icon files for available enums)
+size="sm"    // 16px  
+size="md"    // 24px (default)
+size="lg"    // 32px
 
-// Semantic colors
-ICON_COLOR.ACTION
-ICON_COLOR.BRAND
-ICON_COLOR.SUCCESS
-ICON_COLOR.ERROR
-ICON_COLOR.WARNING
-ICON_COLOR.INFO
-ICON_COLOR.TEXT
-ICON_COLOR.WHITE
-ICON_COLOR.DISABLED
-// Plus social media colors: FACEBOOK, GOOGLE, TWITTER, etc.
+// Colors (check individual icon files for available enums)
+color="action"
+color="success"
+color="error"
+color="warning"
+color="info"
 ```
 
 **Common Icon Patterns**:
 ```tsx
 // Status indicator
 <CircleCheckRegular 
-  color={CircleCheckRegular.COLOR.SUCCESS}
-  size={CircleCheckRegular.SIZE.SM}
+  size="sm"
   ariaLabel="Success"
 />
 
 // Navigation
 <ChevronRightRegular 
-  color={ChevronRightRegular.COLOR.ACTION}
-  size={ChevronRightRegular.SIZE.SM}
+  size="sm"
 />
 
-// Social media
-<Facebook 
-  color={Facebook.COLOR.FACEBOOK}
-  size={Facebook.SIZE.MD}
+// User avatar
+<UserRegular 
+  size="md"
 />
 ```
-
-## Documentation Reference
-
-### Component Documentation
-- **Location**: `design-system-docs/`
-- **Format**: MDX files for each component
-- **Contents**: Props, usage examples, accessibility guidelines
-
-**Key Documentation Files**:
-- `design-system-docs/DesignSystemDecorator.mdx` - Context setup (essential)
-- `design-system-docs/Icon.mdx` - Icon usage patterns
-- `design-system-docs/Button.mdx` - Button component guide
-- `design-system-docs/[Component].mdx` - Individual component guides
-
-### Style Documentation
-- **Location**: `docs/src/style-guide/sass-variables/`
-- **Contents**: Visual examples and token references
-- **Files**: Colors.mdx, FontSize.mdx, Spacing.mdx, etc.
-
-## Build & Export Structure
-
-### Package Exports (from `library/package.json`)
-```json
-{
-  "main": "./lib/cjs/index.js",
-  "module": "lib/index.js", 
-  "types": "lib/types/src/index.d.ts",
-  "exports": {
-    ".": "standard component imports",
-    "./*": "per-component imports", 
-    "./icons/*": "individual icon imports",
-    "./types": "TypeScript type definitions"
-  }
-}
-```
-
-### File Locations
-- **Source**: `library/src/`
-- **Built output**: `library/lib/`
-- **Global styles**: `library/src/scss/hearsay-design-system.scss`
-- **Component exports**: `library/src/index.ts`
 
 ## Best Practices for AI Implementation
 
 ### 1. Always Use DesignSystemDecorator
 ```tsx
+import { DesignSystemDecorator } from '../../../hearsay-design-system/library/src/components/DesignSystemDecorator/DesignSystemDecorator';
+
 // ✅ Correct - Wrap app with context
 <DesignSystemDecorator>
   <MyApp />
@@ -298,110 +275,112 @@ ICON_COLOR.DISABLED
 <MyApp />
 ```
 
-### 2. Use Semantic Colors and Sizes
+### 2. Import Components and Types Separately
 ```tsx
-// ✅ Correct - Use semantic color enums
-<Button theme={Button.THEME.PRIMARY} />
-<CircleCheckRegular color={CircleCheckRegular.COLOR.SUCCESS} />
+// ✅ Correct - Import component and types separately
+import { Button } from '../../../hearsay-design-system/library/src/components/Button/Button';
+import { BUTTON_THEME, BUTTON_SIZE, BUTTON_TYPES } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
 
-// ❌ Avoid - Don't use arbitrary color values  
-<Button style={{backgroundColor: '#blue'}} />
+// ❌ Incorrect - Trying to import from package root
+import { Button, BUTTON_THEME } from '@hearsaycorp/hearsay-design-system';
 ```
 
-### 3. Import Individual Icons
+### 3. Use Semantic Themes and Sizes
+```tsx
+// ✅ Correct - Use semantic enum values
+<Button theme={BUTTON_THEME.PRIMARY} size={BUTTON_SIZE.MD} />
+<Alert theme={ALERT_THEME.ERROR} />
+
+// ❌ Avoid - Don't use string literals  
+<Button theme="primary" size="medium" />
+```
+
+### 4. Import Individual Icons
 ```tsx
 // ✅ Correct - Import specific icons
-import { UserRegular } from '@hearsaycorp/hearsay-design-system/icons/UserRegular';
+import { UserRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/UserRegular';
 
-// ❌ Incorrect - Imports entire icon library
-import { UserRegular } from '@hearsaycorp/hearsay-design-system';
+// ❌ Incorrect - Don't import from generic Icon component
+import { Icon } from '../../../hearsay-design-system/library/src/components/Icon/Icon';
 ```
 
-### 4. Use TypeScript Types
+### 5. TypeScript Types
 ```tsx
-import { ButtonProps } from '@hearsaycorp/hearsay-design-system';
+import { ButtonProps } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
+import { TextInputProps } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput.types';
 
 const MyButton: React.FC<ButtonProps> = (props) => {
   return <Button {...props} />;
 };
 ```
 
-### 5. Accessibility Considerations
-- Provide `ariaLabel` for icons that convey meaning
-- Use semantic HTML elements provided by components
-- Leverage built-in focus management and keyboard navigation
-
 ## Common Implementation Patterns
 
 ### Form Layout
 ```tsx
+import React, { useState } from 'react';
+import { DesignSystemDecorator } from '../../../hearsay-design-system/library/src/components/DesignSystemDecorator/DesignSystemDecorator';
+import { TextInput } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput';
+import { TEXT_INPUT_TYPES } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput.types';
+import { Button } from '../../../hearsay-design-system/library/src/components/Button/Button';
+import { BUTTON_THEME, BUTTON_TYPES } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
+import { Checkbox } from '../../../hearsay-design-system/library/src/components/Checkbox/Checkbox';
+
 <DesignSystemDecorator>
   <form>
     <TextInput 
-      label="Email"
-      type="email"
+      labelText="Email"
+      type={TEXT_INPUT_TYPES.EMAIL}
       required
     />
-    <Select 
-      label="Department"
-      options={departmentOptions}
+    <TextInput 
+      labelText="Department"
+      type={TEXT_INPUT_TYPES.TEXT}
     />
     <Checkbox 
-      label="Subscribe to newsletter"
+      labelText="Subscribe to newsletter"
     />
     <Button 
-      type="submit"
-      theme={Button.THEME.PRIMARY}
+      type={BUTTON_TYPES.SUBMIT}
+      theme={BUTTON_THEME.PRIMARY}
       text="Submit"
     />
   </form>
 </DesignSystemDecorator>
 ```
 
-### Modal Dialog
+### Modal Dialog with Alert
 ```tsx
+import { Modal } from '../../../hearsay-design-system/library/src/components/Modal/Modal';
+import { Alert } from '../../../hearsay-design-system/library/src/components/Alert/Alert';
+import { ALERT_THEME } from '../../../hearsay-design-system/library/src/components/Alert/Alert.types';
+import { Button } from '../../../hearsay-design-system/library/src/components/Button/Button';
+import { BUTTON_THEME } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
+
 <Modal
   isOpen={isModalOpen}
   onClose={handleClose}
   title="Confirm Action"
 >
   <Alert
-    type={Alert.TYPE.WARNING}
-    message="This action cannot be undone."
-  />
+    theme={ALERT_THEME.WARNING}
+    title="Warning"
+  >
+    This action cannot be undone.
+  </Alert>
   <div style={{marginTop: 'var(--hds-spacing-md)'}}>
     <Button 
-      theme={Button.THEME.SECONDARY}
+      theme={BUTTON_THEME.SECONDARY}
       text="Cancel"
       onClick={handleClose}
     />
     <Button 
-      theme={Button.THEME.PRIMARY}
+      theme={BUTTON_THEME.PRIMARY}
       text="Confirm"
       onClick={handleConfirm}
     />
   </div>
 </Modal>
-```
-
-### Navigation with Icons
-```tsx
-<nav>
-  <Link href="/dashboard">
-    <HomeRegular 
-      color={HomeRegular.COLOR.ACTION}
-      size={HomeRegular.SIZE.SM}
-    />
-    Dashboard
-  </Link>
-  <Link href="/users">
-    <UsersRegular 
-      color={UsersRegular.COLOR.ACTION}
-      size={UsersRegular.SIZE.SM}
-    />
-    Users
-  </Link>
-</nav>
 ```
 
 ## Troubleshooting
@@ -411,14 +390,14 @@ const MyButton: React.FC<ButtonProps> = (props) => {
 - **Solution**: Ensure `DesignSystemDecorator` wraps your application
 - **Check**: Look for `data-design-system-context="hds-v9"` attribute in DOM
 
-### Bundle Size Issues
-- **Issue**: Large bundle size from icons
-- **Solution**: Import individual icons instead of bulk imports
-- **Check**: Use `import { SpecificIcon } from '@hearsaycorp/hearsay-design-system/icons/SpecificIcon'`
+### Import Errors
+- **Issue**: Cannot resolve module imports
+- **Solution**: Use direct file paths for components and types
+- **Check**: Ensure paths point to actual component files
 
 ### TypeScript Errors
 - **Issue**: Missing type definitions
-- **Solution**: Import types from `'@hearsaycorp/hearsay-design-system'`
+- **Solution**: Import types from `.types.ts` files separately
 - **Check**: Verify component prop interfaces match expected types
 
 ### CSS Custom Properties Not Available
@@ -432,19 +411,20 @@ const MyButton: React.FC<ButtonProps> = (props) => {
 
 **Essential imports for most applications**:
 ```tsx
-import { 
-  DesignSystemDecorator,
-  Button,
-  TextInput,
-  Alert
-} from '@hearsaycorp/hearsay-design-system';
+import { DesignSystemDecorator } from '../../../hearsay-design-system/library/src/components/DesignSystemDecorator/DesignSystemDecorator';
+import { Button } from '../../../hearsay-design-system/library/src/components/Button/Button';
+import { BUTTON_THEME, BUTTON_SIZE, BUTTON_TYPES } from '../../../hearsay-design-system/library/src/components/Button/Button.types';
+import { TextInput } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput';
+import { TEXT_INPUT_TYPES } from '../../../hearsay-design-system/library/src/components/TextInput/TextInput.types';
+import { Alert } from '../../../hearsay-design-system/library/src/components/Alert/Alert';
+import { ALERT_THEME } from '../../../hearsay-design-system/library/src/components/Alert/Alert.types';
 ```
 
 **Most commonly used icons**:
 ```tsx
-import { CircleCheckRegular } from '@hearsaycorp/hearsay-design-system/icons/CircleCheckRegular';
-import { TriangleExclamationRegular } from '@hearsaycorp/hearsay-design-system/icons/TriangleExclamationRegular';
-import { UserRegular } from '@hearsaycorp/hearsay-design-system/icons/UserRegular';
+import { CircleCheckRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/CircleCheckRegular';
+import { TriangleExclamationRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/TriangleExclamationRegular';
+import { UserRegular } from '../../../hearsay-design-system/library/src/components/Icon/icons/UserRegular';
 ```
 
 **Key design tokens**:
